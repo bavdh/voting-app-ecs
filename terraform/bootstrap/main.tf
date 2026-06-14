@@ -1,8 +1,11 @@
 # trust relationship for ecr role
 data "aws_iam_policy_document" "github_actions_oidc_trust_document" {
   statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+      "sts:TagSession"
+    ]
 
     principals {
       type        = "AWS"
@@ -46,8 +49,11 @@ resource "aws_iam_role_policy" "voting-app-deployment-policy" {
 # Trust Policy - Allows OIDC role to trust this role 
 data "aws_iam_policy_document" "ecr_push_trust" {
   statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+      "sts:TagSession"
+    ]
 
     principals {
       type        = "AWS"
