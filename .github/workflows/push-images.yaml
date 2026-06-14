@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  test-oidc:
+  push-vote-image-to-ecr:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials via OIDC
@@ -37,6 +37,22 @@ jobs:
           region: ${{ env.AWS_REGION }}
           image: voting-app/vote:v1.0
 
+  push-worker-image-to-ecr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/GitHubActionsOIDCRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Assume ECR Push Role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/CustomElasticContainerRegistryRole
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+
       - name: Build worker image
         run: docker build --tag voting-app/worker:v1.0 .
 
@@ -45,6 +61,22 @@ jobs:
         with:
           region: ${{ env.AWS_REGION }}
           image: voting-app/worker:v1.0
+
+  push-result-image-to-ecr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/GitHubActionsOIDCRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Assume ECR Push Role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/CustomElasticContainerRegistryRole
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
 
       - name: Build result image
         run: docker build --tag voting-app/result:v1.0 .
