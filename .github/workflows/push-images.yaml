@@ -27,7 +27,7 @@ jobs:
       - name: Assume ECR Push Role
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/CustomElasticContainerRegistryRole
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/ECRImagePushRole
           aws-region: ${{ env.AWS_REGION }}
           role-chaining: true
 
@@ -55,7 +55,7 @@ jobs:
       - name: Assume ECR Push Role
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/CustomElasticContainerRegistryRole
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/ECRImagePushRole
           aws-region: ${{ env.AWS_REGION }}
           role-chaining: true
 
@@ -83,7 +83,7 @@ jobs:
       - name: Assume ECR Push Role
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/CustomElasticContainerRegistryRole
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/ECRImagePushRole
           aws-region: ${{ env.AWS_REGION }}
           role-chaining: true
 
