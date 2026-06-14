@@ -18,35 +18,42 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT:role/GitHubActionsOIDCRole
-          aws-region: $AWS_REGION
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/GitHubActionsOIDCRole
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Assume ECR Push Role
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::$AWS_ACCOUNT:role/CustomElasticContainerRegistryRole
-          aws-region: $AWS_REGION
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/CustomElasticContainerRegistryRole
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+
+      - name: Build vote image
+        run: docker build --tag voting-app/vote:v1.0 .
 
       - name: Push Vote image to ECR
-        run: docker build --tag voting-app/vote:v1.0 .
         id: ecr
         uses: jwalton/gh-ecr-push@v2
         with:
-          region: $AWS_REGION
+          region: ${{ env.AWS_REGION }}
           image: voting-app/vote:v1.0
 
-      - name: Push Worker image to ECR
+      - name: Build worker image
         run: docker build --tag voting-app/worker:v1.0 .
+
+      - name: Push Worker image to ECR
         id: ecr
         uses: jwalton/gh-ecr-push@v2
         with:
-          region: $AWS_REGION
+          region: ${{ env.AWS_REGION }}
           image: voting-app/worker:v1.0
 
-      - name: Push Result image to ECR
+      - name: Build result image
         run: docker build --tag voting-app/result:v1.0 .
+
+      - name: Push Result image to ECR
         id: ecr
         uses: jwalton/gh-ecr-push@v2
         with:
-          region: $AWS_REGION
+          region: ${{ env.AWS_REGION }}
           image: voting-app/result:v1.0
