@@ -15,6 +15,9 @@ jobs:
   push-vote-image-to-ecr:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -29,7 +32,7 @@ jobs:
           role-chaining: true
 
       - name: Build vote image
-        run: docker build --tag voting-app/vote:v1.0 .
+        run: docker build --tag voting-app/vote:v1.0 ./vote
 
       - name: Push Vote image to ECR
         uses: jwalton/gh-ecr-push@v2
@@ -40,6 +43,9 @@ jobs:
   push-worker-image-to-ecr:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -54,7 +60,7 @@ jobs:
           role-chaining: true
 
       - name: Build worker image
-        run: docker build --tag voting-app/worker:v1.0 .
+        run: docker build --tag voting-app/worker:v1.0 ./worker
 
       - name: Push Worker image to ECR
         uses: jwalton/gh-ecr-push@v2
@@ -65,6 +71,9 @@ jobs:
   push-result-image-to-ecr:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -79,7 +88,7 @@ jobs:
           role-chaining: true
 
       - name: Build result image
-        run: docker build --tag voting-app/result:v1.0 .
+        run: docker build --tag voting-app/result:v1.0 ./result
 
       - name: Push Result image to ECR
         uses: jwalton/gh-ecr-push@v2
