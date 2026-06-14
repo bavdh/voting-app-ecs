@@ -31,6 +31,11 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-chaining: true
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.15.6"
+
       - name: Terraform Deploy
         working-directory: ./terraform/infrastructures
         run: |
