@@ -34,15 +34,15 @@ data "aws_iam_policy_document" "ecr_permissions" {
 
 
 # ecr role with trust policty
-resource "aws_iam_role" "voting-app-deployment-role" {
+resource "aws_iam_role" "voting_app_deployment_role" {
   name               = "VotingAppDeploymentRole"
   assume_role_policy = data.aws_iam_policy_document.github_actions_oidc_trust_document.json
 }
 
 # attach policy for ecr role
-resource "aws_iam_role_policy" "voting-app-deployment-policy" {
+resource "aws_iam_role_policy" "voting_app_deployment_policy" {
   name   = "VotingAppDeploymentECRPolicy"
-  role   = aws_iam_role.voting-app-deployment-role.id
+  role   = aws_iam_role.voting_app_deployment_role.id
   policy = data.aws_iam_policy_document.ecr_permissions.json
 }
 
@@ -112,4 +112,36 @@ resource "aws_s3_bucket_versioning" "tf_state" {
   versioning_configuration {
     status = "Enabled"
   }
+}
+
+data "aws_iam_policy_document" "terraform_state_access" {
+  statement {
+    sid    = "StateBucketList"
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::voting-app-terraform-state-${var.aws_account}"
+    ]
+  }
+
+  statement {
+    sid    = "StateObjectAccess"
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject"
+    ]
+    resources = [
+      "arn:aws:s3:::voting-app-terraform-state-${var.aws_account}/voting-app/infrastructures/*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "terraform_state_access" {
+  name   = "terraform-state-access"
+  role   = aws_iam_role.voting_app_deployment_role.id
+  policy = data.aws_iam_policy_document.terraform_state_access.json
 }
