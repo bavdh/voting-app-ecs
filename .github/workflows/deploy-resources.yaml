@@ -1,0 +1,40 @@
+name: Deploy AWS Infrastructures
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_ACCOUNT: 653236170203
+  AWS_REGION: ap-southeast-1
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  push-vote-image-to-ecr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/GitHubActionsOIDCRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Assume AWS Deployment Role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/VotingAppDeploymentRole
+          aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
+
+      - name: Terraform Deploy
+        working-directory: ./terraform/infrastructures
+        run: |
+          terraform init
+          terraform validate
+          terraform plan -out=tfplan
+          terraform apply tfplan

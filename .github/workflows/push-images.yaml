@@ -1,4 +1,4 @@
-name: Push Vote image to ECR
+name: Push images to ECR
 
 on:
   workflow_dispatch:
