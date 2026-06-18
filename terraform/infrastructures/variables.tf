@@ -9,3 +9,9 @@ variable "aws_account" {
   type        = string
   default     = "653236170203"
 }
+
+variable "project_name" {
+  description = "Project Name"
+  type        = string
+  default     = "voting-app"
+}
