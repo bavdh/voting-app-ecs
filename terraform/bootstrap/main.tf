@@ -30,6 +30,68 @@ data "aws_iam_policy_document" "ecr_permissions" {
     ]
     resources = ["*"]
   }
+
+  statement {
+    sid    = "SecretManagement"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:CreateSecret",
+      "secretsmanager:DeleteSecret",
+      "secretsmanager:TagResource"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid       = "RDSServiceLinkedRole"
+    effect    = "Allow"
+    actions   = ["iam:CreateServiceLinkedRole"]
+    resources = ["arn:aws:iam::${var.aws_account}:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS"]
+
+    condition {
+      test     = "StringLike"
+      variable = "iam:AWSServiceName"
+      values   = ["rds.amazonaws.com"]
+    }
+  }
+
+  statement {
+    sid       = "ElastiCacheServiceLinkedRole"
+    effect    = "Allow"
+    actions   = ["iam:CreateServiceLinkedRole"]
+    resources = ["arn:aws:iam::${var.aws_account}:role/aws-service-role/elasticache.amazonaws.com/AWSServiceRoleForElastiCache"]
+
+    condition {
+      test     = "StringLike"
+      variable = "iam:AWSServiceName"
+      values   = ["elasticache.amazonaws.com"]
+    }
+  }
+
+  statement {
+    sid    = "KMSPermissions"
+    effect = "Allow"
+    actions = [
+      "kms:CreateGrant",
+      "kms:DescribeKey",
+      "kms:ListAliases",
+      "kms:Decrypt",
+      "kms:GenerateDataKey"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "MiscPermissions"
+    effect = "Allow"
+    actions = [
+      "ec2:*",
+      "rds:*"
+    ]
+    resources = ["*"]
+  }
 }
 
 
