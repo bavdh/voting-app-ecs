@@ -32,4 +32,24 @@ module "rds" {
   instance_class    = "db.t4g.micro"
   engine_version    = "18.3"
   allocated_storage = 20
+
+  allowed_security_group_ids = [] # filled in once the ECS module produces an instance SG
+
+}
+
+module "elasticache" {
+  source = "./modules/elasticache"
+
+  aws_account  = var.aws_account
+  aws_region   = var.aws_region
+  project_name = var.project_name
+
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+
+  node_type      = "cache.t4g.micro" # for demo
+  engine_version = "7.1"
+
+  allowed_security_group_ids = [] # filled in once the ECS module produces an instance SG
+
 }
