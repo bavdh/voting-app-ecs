@@ -33,7 +33,7 @@ module "rds" {
   engine_version    = "18.3"
   allocated_storage = 20
 
-  allowed_security_group_ids = [] # filled in once the ECS module produces an instance SG
+  allowed_security_group_ids = [module.ecs.instance_security_group_id]
 
 }
 
@@ -50,6 +50,22 @@ module "elasticache" {
   node_type      = "cache.t4g.micro" # for demo
   engine_version = "7.1"
 
-  allowed_security_group_ids = [] # filled in once the ECS module produces an instance SG
+  allowed_security_group_ids = [module.ecs.instance_security_group_id]
 
+}
+
+module "ecs" {
+  source = "./modules/ecs"
+
+  aws_account  = var.aws_account
+  aws_region   = var.aws_region
+  project_name = var.project_name
+
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+
+  instance_type    = "t3.micro"
+  min_size         = 2
+  max_size         = 2
+  desired_capacity = 2
 }

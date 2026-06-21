@@ -8,26 +8,34 @@ resource "aws_security_group" "redis" {
   description = "Allow Redis access from ECS tasks"
   vpc_id      = var.vpc_id
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "${var.project_name}-redis-sg"
   }
 }
 
-resource "aws_security_group_rule" "redis_ingress" {
-  for_each                 = toset(var.allowed_security_group_ids)
-  type                     = "ingress"
-  from_port                = 6379
-  to_port                  = 6379
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.redis.id
-  source_security_group_id = each.value
+resource "aws_vpc_security_group_egress_rule" "redis_all" {
+  security_group_id = aws_security_group.redis.id
+  description       = "Allow all outbound traffic"
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
+
+  tags = {
+    Name = "${var.project_name}-redis-egress-all"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "redis_ingress" {
+  for_each                     = toset(var.allowed_security_group_ids)
+  security_group_id            = aws_security_group.redis.id
+  description                  = "Allow Redis from ECS instance SG"
+  ip_protocol                  = "tcp"
+  from_port                    = 6379
+  to_port                      = 6379
+  referenced_security_group_id = each.value
+
+  tags = {
+    Name = "${var.project_name}-redis-ingress-${each.key}"
+  }
 }
 
 resource "aws_elasticache_cluster" "main" {
