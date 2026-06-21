@@ -84,6 +84,36 @@ data "aws_iam_policy_document" "ecr_permissions" {
   }
 
   statement {
+    sid    = "ECSInfrastructure"
+    effect = "Allow"
+    actions = [
+      "ecs:*",
+      "autoscaling:*",
+      "iam:CreateRole",
+      "iam:DeleteRole",
+      "iam:GetRole",
+      "iam:AttachRolePolicy",
+      "iam:DetachRolePolicy",
+      "iam:PutRolePolicy",
+      "iam:DeleteRolePolicy",
+      "iam:GetRolePolicy",
+      "iam:ListRolePolicies",
+      "iam:ListAttachedRolePolicies",
+      "iam:CreateInstanceProfile",
+      "iam:DeleteInstanceProfile",
+      "iam:GetInstanceProfile",
+      "iam:AddRoleToInstanceProfile",
+      "iam:RemoveRoleFromInstanceProfile",
+      "iam:PassRole",
+      "iam:TagRole",
+      "ssm:GetParameter",
+      "ssm:GetParameters",
+      "ssm:GetParametersByPath"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
     sid    = "MiscPermissions"
     effect = "Allow"
     actions = [
