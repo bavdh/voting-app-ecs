@@ -84,6 +84,24 @@ data "aws_iam_policy_document" "ecr_permissions" {
   }
 
   statement {
+    sid    = "ElastiCacheManagement"
+    effect = "Allow"
+    actions = [
+      "elasticache:CreateCacheSubnetGroup",
+      "elasticache:DeleteCacheSubnetGroup",
+      "elasticache:DescribeCacheSubnetGroups",
+      "elasticache:CreateCacheCluster",
+      "elasticache:DeleteCacheCluster",
+      "elasticache:DescribeCacheClusters",
+      "elasticache:ModifyCacheCluster",
+      "elasticache:ListTagsForResource",
+      "elasticache:AddTagsToResource",
+      "elasticache:RemoveTagsFromResource"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
     sid    = "ECSInfrastructure"
     effect = "Allow"
     actions = [
