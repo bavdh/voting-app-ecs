@@ -21,7 +21,7 @@ variable "private_subnet_ids" {
   type = list(string)
 }
 
-variable "allowed_security_group_ids" {
+variable "allowed_security_group_id" {
   description = "SGs allowed to reach Redis on 6379 (e.g. the ECS instance SG)"
   type        = string
 }

@@ -34,10 +34,10 @@ resource "aws_vpc_security_group_ingress_rule" "rds_ingress" {
   ip_protocol                  = "tcp"
   from_port                    = 5432
   to_port                      = 5432
-  referenced_security_group_id = var.allowed_security_group_ids
+  referenced_security_group_id = var.allowed_security_group_id
 
   tags = {
-    Name = "${var.project_name}-rds-ingress-${each.key}"
+    Name = "${var.project_name}-rds-ingress"
   }
 }
 

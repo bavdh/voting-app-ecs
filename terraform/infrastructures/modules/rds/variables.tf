@@ -21,7 +21,7 @@ variable "vpc_id" {
   type = string
 }
 
-variable "allowed_security_group_ids" {
+variable "allowed_security_group_id" {
   description = "SGs allowed to reach Postgres on 5432 (e.g. the ECS instance SG)"
   type        = string
 }

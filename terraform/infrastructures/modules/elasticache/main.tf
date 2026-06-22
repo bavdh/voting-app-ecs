@@ -25,7 +25,6 @@ resource "aws_vpc_security_group_egress_rule" "redis_all" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "redis_ingress" {
-  count                        = var.allowed_security_group_ids != null ? 1 : 0
   security_group_id            = aws_security_group.redis.id
   description                  = "Allow Redis from ECS instance SG"
   ip_protocol                  = "tcp"
@@ -34,7 +33,7 @@ resource "aws_vpc_security_group_ingress_rule" "redis_ingress" {
   referenced_security_group_id = var.allowed_security_group_id
 
   tags = {
-    Name = "${var.project_name}-redis-ingress-${each.key}"
+    Name = "${var.project_name}-redis-ingress"
   }
 }
 
