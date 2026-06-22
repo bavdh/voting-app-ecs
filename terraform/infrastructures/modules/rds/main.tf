@@ -29,13 +29,12 @@ resource "aws_vpc_security_group_egress_rule" "rds_all" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "rds_ingress" {
-  for_each                     = toset(var.allowed_security_group_ids)
   security_group_id            = aws_security_group.rds.id
   description                  = "Allow Postgres from ECS instance SG"
   ip_protocol                  = "tcp"
   from_port                    = 5432
   to_port                      = 5432
-  referenced_security_group_id = each.value
+  referenced_security_group_id = var.allowed_security_group_ids
 
   tags = {
     Name = "${var.project_name}-rds-ingress-${each.key}"

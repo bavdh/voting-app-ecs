@@ -23,8 +23,7 @@ variable "vpc_id" {
 
 variable "allowed_security_group_ids" {
   description = "SGs allowed to reach Postgres on 5432 (e.g. the ECS instance SG)"
-  type        = list(string)
-  default     = []
+  type        = string
 }
 
 
