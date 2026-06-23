@@ -82,3 +82,32 @@ module "alb" {
   private_subnet_ids             = module.vpc.private_subnet_ids
   ecs_instance_security_group_id = module.ecs.instance_security_group_id
 }
+
+locals {
+  ecr_base = "${var.aws_account}.dkr.ecr.${var.aws_region}.amazonaws.com"
+}
+
+module "services" {
+  source = "./modules/services"
+
+  aws_account  = var.aws_account
+  aws_region   = var.aws_region
+  project_name = var.project_name
+
+  ecs_cluster_id          = module.ecs.cluster_id
+  capacity_provider_name  = module.ecs.capacity_provider_name
+  task_execution_role_arn = module.ecs.task_execution_role_arn
+  vote_target_group_arn   = module.alb.vote_target_group_arn
+  result_target_group_arn = module.alb.result_target_group_arn
+  redis_endpoint          = module.elasticache.endpoint
+  redis_port              = module.elasticache.port
+  db_endpoint             = module.rds.endpoint
+  db_name                 = module.rds.db_name
+  db_username             = "postgres"
+  rds_secret_arn          = module.rds.master_user_secret_arn
+
+  # manually given the image tag for now. This should be handled other ways
+  vote_image   = "${local.ecr_base}/voting-app/vote:1.0"
+  result_image = "${local.ecr_base}/voting-app/result:1.0"
+  worker_image = "${local.ecr_base}/voting-app/worker:1.0"
+}
