@@ -21,8 +21,10 @@ resource "aws_ecs_task_definition" "vote" {
   execution_role_arn       = var.task_execution_role_arn
 
   container_definitions = jsonencode([{
-    name  = "vote"
-    image = var.vote_image
+    name   = "vote"
+    image  = var.vote_image
+    cpu    = 256
+    memory = 512
 
     portMappings = [{
       containerPort = 80
@@ -56,8 +58,10 @@ resource "aws_ecs_task_definition" "result" {
   execution_role_arn       = var.task_execution_role_arn
 
   container_definitions = jsonencode([{
-    name  = "result"
-    image = var.result_image
+    name   = "result"
+    image  = var.result_image
+    cpu    = 256
+    memory = 512
 
     portMappings = [{
       containerPort = 4000
@@ -98,8 +102,10 @@ resource "aws_ecs_task_definition" "worker" {
   execution_role_arn       = var.task_execution_role_arn
 
   container_definitions = jsonencode([{
-    name  = "worker"
-    image = var.worker_image
+    name   = "worker"
+    image  = var.worker_image
+    cpu    = 256
+    memory = 512
 
     environment = [
       { name = "REDIS_HOST", value = var.redis_endpoint },
