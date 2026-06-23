@@ -71,6 +71,19 @@ data "aws_iam_policy_document" "ecr_permissions" {
   }
 
   statement {
+    sid       = "ElasticLoadBalancingLinkedRole"
+    effect    = "Allow"
+    actions   = ["iam:CreateServiceLinkedRole"]
+    resources = ["arn:aws:iam::${var.aws_account}:role/aws-service-role/elasticloadbalancing.amazonaws.com/AWSServiceRoleForElasticLoadBalancing"]
+
+    condition {
+      test     = "StringLike"
+      variable = "iam:AWSServiceName"
+      values   = ["elasticloadbalancing.amazonaws.com"]
+    }
+  }
+
+  statement {
     sid    = "KMSPermissions"
     effect = "Allow"
     actions = [
@@ -159,7 +172,41 @@ data "aws_iam_policy_document" "ecr_permissions" {
       "elasticloadbalancing:ModifyRule",
       "elasticloadbalancing:AddTags",
       "elasticloadbalancing:RemoveTags",
-      "elasticloadbalancing:DescribeTags"
+      "elasticloadbalancing:DescribeTags",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:ModifyListener",
+      "elasticloadbalancing:DescribeListenerAttributes"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "CloudWatchLogs"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:DeleteLogGroup",
+      "logs:DescribeLogGroups",
+      "logs:PutRetentionPolicy",
+      "logs:DeleteRetentionPolicy",
+      "logs:ListTagsLogGroup",
+      "logs:TagLogGroup",
+      "logs:UntagLogGroup",
+      "logs:PutLogEvents",
+      "logs:CreateLogStream",
+      "logs:DescribeLogStreams",
+      "logs:ListTagsLogGroup",
+      "logs:ListTagsForResource"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "ELBDescribe"
+    effect = "Allow"
+    actions = [
+      "elasticloadbalancing:DescribeAccountLimits",
+      "elasticloadbalancing:DescribeSSLPolicies"
     ]
     resources = ["*"]
   }
