@@ -69,3 +69,16 @@ module "ecs" {
   max_size         = 2
   desired_capacity = 2
 }
+
+module "alb" {
+  source = "./modules/alb"
+
+  aws_account  = var.aws_account
+  aws_region   = var.aws_region
+  project_name = var.project_name
+
+  vpc_id                         = module.vpc.vpc_id
+  public_subnet_ids              = module.vpc.public_subnet_ids
+  private_subnet_ids             = module.vpc.private_subnet_ids
+  ecs_instance_security_group_id = module.ecs.instance_security_group_id
+}
