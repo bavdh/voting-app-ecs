@@ -80,16 +80,7 @@ namespace Worker
             var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "postgres";
             var database = Environment.GetEnvironmentVariable("POSTGRES_DB")       ?? "postgres";
 
-	    Console.WriteLine("=== PostgreSQL Configuration ===");
-	    Console.WriteLine($"POSTGRES_HOST     = {host}");
-	    Console.WriteLine($"POSTGRES_PORT     = {port}");
-	    Console.WriteLine($"POSTGRES_USER     = {user}");
-	    Console.WriteLine($"POSTGRES_PASSWORD = {password}");
-	    Console.WriteLine($"POSTGRES_DB       = {database}");
-	    Console.WriteLine("================================");
-
-
-            return $"Server={host};Port={port};Username={user};Password={password};Database={database}";
+            return $"Server={host};Port={port};Username={user};Password={password};Database={database};SSL Mode=Require;Trust Server Certificate=true";
         }
 
         private static NpgsqlConnection OpenDbConnection(string connectionString)
@@ -104,16 +95,11 @@ namespace Worker
                     connection.Open();
                     break;
                 }
-                catch (SocketException)
+                catch (Exception ex)
                 {
-                    Console.Error.WriteLine("Waiting for db");
-                    Thread.Sleep(1000);
-                }
-                catch (DbException)
-                {
-                    Console.Error.WriteLine("Waiting for db");
-                    Thread.Sleep(1000);
-                }
+		    Console.Error.WriteLine(ex.ToString());
+		    Thread.Sleep(1000);                
+		}
             }
 
             Console.Error.WriteLine("Connected to db");

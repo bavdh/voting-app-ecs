@@ -17,14 +17,6 @@ io.on('connection', function (socket) {
   });
 });
 
-console.log({
-  host: process.env.POSTGRES_HOST || 'db',
-  port: process.env.POSTGRES_PORT || 5432,
-  user: process.env.POSTGRES_USER || 'postgres',
-  password: process.env.POSTGRES_PASSWORD || 'postgres',
-  database: process.env.POSTGRES_DB || 'postgres'
-});
-
 var pool = new Pool({
   host: process.env.POSTGRES_HOST || 'db',
   port: process.env.POSTGRES_PORT || 5432,
@@ -38,8 +30,13 @@ async.retry(
   function(callback) {
     pool.connect(function(err, client, done) {
       if (err) {
-	console.error(err);
-        console.error("Waiting for db");
+	console.error(JSON.stringify({
+	  event: "postgres_connection_failed",
+	  timestamp: new Date().toISOString(),
+	  error: err.message,
+	  code: err.code,
+	  stack: err.stack
+	}));
       }
       callback(err, client);
     });
