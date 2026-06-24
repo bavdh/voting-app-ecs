@@ -32,13 +32,13 @@ jobs:
           role-chaining: true
 
       - name: Build vote image
-        run: docker build --tag voting-app/vote:v1.0 ./vote
+        run: docker build --tag voting-app/vote:${{ github.sha }} ./vote
 
       - name: Push Vote image to ECR
         uses: jwalton/gh-ecr-push@v2
         with:
           region: ${{ env.AWS_REGION }}
-          image: voting-app/vote:v1.0
+          image: voting-app/vote:${{ github.sha }}
 
   push-worker-image-to-ecr:
     runs-on: ubuntu-latest
@@ -60,13 +60,13 @@ jobs:
           role-chaining: true
 
       - name: Build worker image
-        run: docker build --tag voting-app/worker:v1.0 ./worker
+        run: docker build --tag voting-app/worker:${{ github.sha }} ./worker
 
       - name: Push Worker image to ECR
         uses: jwalton/gh-ecr-push@v2
         with:
           region: ${{ env.AWS_REGION }}
-          image: voting-app/worker:v1.0
+          image: voting-app/worker:${{ github.sha }}
 
   push-result-image-to-ecr:
     runs-on: ubuntu-latest
@@ -88,10 +88,10 @@ jobs:
           role-chaining: true
 
       - name: Build result image
-        run: docker build --tag voting-app/result:v1.0 ./result
+        run: docker build --tag voting-app/result:${{ github.sha }} ./result
 
       - name: Push Result image to ECR
         uses: jwalton/gh-ecr-push@v2
         with:
           region: ${{ env.AWS_REGION }}
-          image: voting-app/result:v1.0
+          image: voting-app/result:${{ github.sha }}
