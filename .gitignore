@@ -24,3 +24,6 @@ node_modules/
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Environemnt files
+**/.env

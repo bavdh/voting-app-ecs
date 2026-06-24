@@ -80,6 +80,15 @@ namespace Worker
             var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "postgres";
             var database = Environment.GetEnvironmentVariable("POSTGRES_DB")       ?? "postgres";
 
+	    Console.WriteLine("=== PostgreSQL Configuration ===");
+	    Console.WriteLine($"POSTGRES_HOST     = {host}");
+	    Console.WriteLine($"POSTGRES_PORT     = {port}");
+	    Console.WriteLine($"POSTGRES_USER     = {user}");
+	    Console.WriteLine($"POSTGRES_PASSWORD = {password}");
+	    Console.WriteLine($"POSTGRES_DB       = {database}");
+	    Console.WriteLine("================================");
+
+
             return $"Server={host};Port={port};Username={user};Password={password};Database={database}";
         }
 
