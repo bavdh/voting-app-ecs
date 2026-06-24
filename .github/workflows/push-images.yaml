@@ -40,6 +40,32 @@ jobs:
           region: ${{ env.AWS_REGION }}
           image: voting-app/vote:${{ github.sha }}
 
+      - name: Download vote current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition voting-app-vote \
+            --query taskDefinition \
+            > task-definition.json
+
+      - name: Update vote image in task definition
+        id: task-def-vote
+        env:
+          ECR_REGISTRY: ${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: vote
+          image: ${{ env.ECR_REGISTRY }}/voting-app/vote:${{ github.sha }}
+
+      - name: Deploy vote updated task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def-vote.outputs.task-definition }}
+          service: voting-app-vote
+          cluster: voting-app-cluster
+          max-retries: 5
+          wait-for-service-stability: true
+
   push-worker-image-to-ecr:
     runs-on: ubuntu-latest
     steps:
@@ -68,6 +94,32 @@ jobs:
           region: ${{ env.AWS_REGION }}
           image: voting-app/worker:${{ github.sha }}
 
+      - name: Download worker current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition voting-app-worker \
+            --query taskDefinition \
+            > task-definition.json
+
+      - name: Update worker image in task definition
+        id: task-def-worker
+        env:
+          ECR_REGISTRY: ${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: worker
+          image: ${{ env.ECR_REGISTRY }}/voting-app/worker:${{ github.sha }}
+
+      - name: Deploy worker updated task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def-worker.outputs.task-definition }}
+          service: voting-app-worker
+          cluster: voting-app-cluster
+          max-retries: 5
+          wait-for-service-stability: true
+
   push-result-image-to-ecr:
     runs-on: ubuntu-latest
     steps:
@@ -95,3 +147,29 @@ jobs:
         with:
           region: ${{ env.AWS_REGION }}
           image: voting-app/result:${{ github.sha }}
+
+      - name: Download result current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition voting-app-result \
+            --query taskDefinition \
+            > task-definition.json
+
+      - name: Update result image in task definition
+        id: task-def-result
+        env:
+          ECR_REGISTRY: ${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: result
+          image: ${{ env.ECR_REGISTRY }}/voting-app/result:${{ github.sha }}
+
+      - name: Deploy result updated task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def-result.outputs.task-definition }}
+          service: voting-app-result
+          cluster: voting-app-cluster
+          max-retries: 5
+          wait-for-service-stability: true
