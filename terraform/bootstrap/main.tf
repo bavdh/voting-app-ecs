@@ -306,6 +306,15 @@ data "aws_iam_policy_document" "ecr_push_permissions" {
     ]
     resources = ["arn:aws:ecs:${var.aws_region}:${var.aws_account}:task-definition/*"]
   }
+
+  statement {
+    sid    = "IAMPassRole"
+    effect = "Allow"
+    actions = [
+      "iam:PassRole"
+    ]
+    resources = ["arn:aws:iam::${var.aws_account}:role/voting-app-ecs-task-execution-role"]
+  }
 }
 
 # The role itself — uses the TRUST policy for assume_role_policy
