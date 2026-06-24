@@ -277,6 +277,35 @@ data "aws_iam_policy_document" "ecr_push_permissions" {
     ]
     resources = ["arn:aws:ecr:${var.aws_region}:${var.aws_account}:repository/voting-app/*"]
   }
+
+  statement {
+    sid    = "ECSTaskDefinition"
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeTaskDefinition",
+      "ecs:RegisterTaskDefinition"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "ECSServiceUpdate"
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeServices",
+      "ecs:UpdateService"
+    ]
+    resources = ["arn:aws:ecs:${var.aws_region}:${var.aws_account}:service/voting-app-cluster/*"]
+  }
+
+  statement {
+    sid    = "ECSTagResource"
+    effect = "Allow"
+    actions = [
+      "ecs:TagResource"
+    ]
+    resources = ["arn:aws:ecs:${var.aws_region}:${var.aws_account}:task-definition/*"]
+  }
 }
 
 # The role itself — uses the TRUST policy for assume_role_policy
