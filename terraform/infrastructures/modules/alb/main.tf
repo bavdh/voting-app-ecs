@@ -48,19 +48,33 @@ resource "aws_vpc_security_group_egress_rule" "alb_all" {
   }
 }
 
-# Allow ALB → ECS instances on dynamic bridge port range
-resource "aws_vpc_security_group_ingress_rule" "ecs_from_alb" {
+# Allow ALB → ECS instances on fixed port 
+resource "aws_vpc_security_group_ingress_rule" "ecs_from_alb_vote" {
   security_group_id            = var.ecs_instance_security_group_id
-  description                  = "Allow traffic from ALB on dynamic port range"
+  description                  = "Allow traffic from ALB to reach vote container"
   ip_protocol                  = "tcp"
-  from_port                    = 32768
-  to_port                      = 65535
+  from_port                    = 8080
+  to_port                      = 8080
   referenced_security_group_id = aws_security_group.alb.id
 
   tags = {
-    Name = "${var.project_name}-ecs-ingress-from-alb"
+    Name = "${var.project_name}-ecs-ingress-vote"
   }
 }
+
+resource "aws_vpc_security_group_ingress_rule" "ecs_from_alb_result" {
+  security_group_id            = var.ecs_instance_security_group_id
+  description                  = "Allow traffic from ALB to reach result container"
+  ip_protocol                  = "tcp"
+  from_port                    = 8081
+  to_port                      = 8081
+  referenced_security_group_id = aws_security_group.alb.id
+
+  tags = {
+    Name = "${var.project_name}-ecs-ingress-result"
+  }
+}
+
 
 # --- ALB ---
 resource "aws_lb" "main" {
