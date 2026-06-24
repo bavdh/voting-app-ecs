@@ -23,7 +23,7 @@ variable "private_subnet_ids" {
 
 variable "instance_type" {
   type    = string
-  default = "t3.micro"
+  default = "t3.small"
 }
 
 variable "min_size" {

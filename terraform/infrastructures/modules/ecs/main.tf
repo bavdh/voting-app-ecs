@@ -71,6 +71,13 @@ resource "aws_autoscaling_group" "ecs" {
     version = "$Latest"
   }
 
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
+  }
+
   tag {
     key                 = "AmazonECSManaged"
     value               = true

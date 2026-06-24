@@ -64,7 +64,7 @@ module "ecs" {
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
 
-  instance_type    = "t3.micro"
+  instance_type    = "t3.small"
   min_size         = 2
   max_size         = 2
   desired_capacity = 2
