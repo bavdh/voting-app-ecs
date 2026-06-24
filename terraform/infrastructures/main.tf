@@ -107,7 +107,7 @@ module "services" {
   rds_secret_arn          = module.rds.master_user_secret_arn
 
   # manually given the image tag for now. This should be handled other ways
-  vote_image   = "${local.ecr_base}/voting-app/vote:v1.0"
-  result_image = "${local.ecr_base}/voting-app/result:v1.0"
-  worker_image = "${local.ecr_base}/voting-app/worker:v1.0"
+  vote_image   = "${local.ecr_base}/voting-app/vote:${var.vote_image_tag}"
+  result_image = "${local.ecr_base}/voting-app/result:${var.result_image_tag}"
+  worker_image = "${local.ecr_base}/voting-app/worker:${var.worker_image_tag}"
 }
