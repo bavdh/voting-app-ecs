@@ -114,7 +114,7 @@ resource "aws_lb_target_group" "vote" {
 
 resource "aws_lb_target_group" "result" {
   name        = "${var.project_name}-result-tg"
-  port        = 4000 # container port for result (what server.js actually listens on)
+  port        = 80 # container port for result (what server.js actually listens on)
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "instance"
