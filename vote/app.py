@@ -41,7 +41,11 @@ def hello():
         vote = request.form["vote"]
         app.logger.info("Received vote for %s", vote)
         data = json.dumps({"voter_id": voter_id, "vote": vote})
-        redis.rpush("votes", data)
+        try:
+            result = redis.rpush("votes", data)
+            app.logger.info("RPUSH result=%s", result)
+        except Exception as e:
+            app.logger.exception("Redis error: %s", e)
 
     resp = make_response(
         render_template(
