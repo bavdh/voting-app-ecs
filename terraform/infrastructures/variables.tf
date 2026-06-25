@@ -19,17 +19,17 @@ variable "project_name" {
 variable "vote_image_tag" {
   description = "Vote image tag"
   type        = string
-  default     = "0bc2ac38f1210a89e6ee873ccb406c2bd1683871"
+  default     = "a8c07e2cb05b3cdf8a95cc3b0345e1610cf93325"
 }
 
 variable "worker_image_tag" {
   description = "Worker image tag"
   type        = string
-  default     = "0bc2ac38f1210a89e6ee873ccb406c2bd1683871"
+  default     = "a8c07e2cb05b3cdf8a95cc3b0345e1610cf93325"
 }
 
 variable "result_image_tag" {
   description = "Result image tag"
   type        = string
-  default     = "0bc2ac38f1210a89e6ee873ccb406c2bd1683871"
+  default     = "a8c07e2cb05b3cdf8a95cc3b0345e1610cf93325"
 }

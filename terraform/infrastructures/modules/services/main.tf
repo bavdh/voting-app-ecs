@@ -64,7 +64,7 @@ resource "aws_ecs_task_definition" "result" {
     memory = 512
 
     portMappings = [{
-      containerPort = 4000
+      containerPort = 80
       hostPort      = 8081
       protocol      = "tcp"
     }]
@@ -169,7 +169,7 @@ resource "aws_ecs_service" "result" {
   load_balancer {
     target_group_arn = var.result_target_group_arn
     container_name   = "result"
-    container_port   = 4000
+    container_port   = 80
   }
 
   depends_on = [var.result_target_group_arn]
