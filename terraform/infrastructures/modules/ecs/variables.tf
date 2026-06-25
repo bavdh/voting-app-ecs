@@ -26,7 +26,7 @@ variable "instance_type" {
   default = "t3.small"
 }
 
-varaible "key_name" {
+variable "key_name" {
   type = string
 }
 
