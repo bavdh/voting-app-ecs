@@ -26,6 +26,10 @@ variable "instance_type" {
   default = "t3.small"
 }
 
+varaible "key_name" {
+  type = string
+}
+
 variable "min_size" {
   type    = number
   default = 2

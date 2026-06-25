@@ -65,6 +65,7 @@ module "ecs" {
   private_subnet_ids = module.vpc.private_subnet_ids
 
   instance_type    = "t3.small"
+  key_name         = "voting-app-key-pair"
   min_size         = 2
   max_size         = 2
   desired_capacity = 2
